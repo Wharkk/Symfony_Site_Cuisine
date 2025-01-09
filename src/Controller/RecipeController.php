@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class RecipeController extends AbstractController
 {
     #[Route('/recettes', name: 'recipe.index')]
-    public function index(Request $request, RecipeRepository $repository, EntityManagerInterface $em): Response
+    public function index(Request $request, RecipeRepository $repository): Response
     {
         $recipes = $repository->findWithDurationLowerThan(20);
         return $this->render('recipe/index.html.twig', [
