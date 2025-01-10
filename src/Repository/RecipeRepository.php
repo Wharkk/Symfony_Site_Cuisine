@@ -16,6 +16,9 @@ class RecipeRepository extends ServiceEntityRepository
         parent::__construct($registry, Recipe::class);
     }
 
+    /**
+     * @return int
+     */
     public function findTotalDuration(): int
     {
         return $this->createQueryBuilder('r')

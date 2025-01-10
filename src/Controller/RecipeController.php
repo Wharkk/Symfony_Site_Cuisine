@@ -9,6 +9,10 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class RecipeController extends AbstractController
 {
+    /**
+     * @param RecipeRepository $repository
+     * @return Response
+     */
     #[Route('/recettes', name: 'recipe.index')]
     public function index(RecipeRepository $repository): Response
     {
@@ -21,6 +25,12 @@ class RecipeController extends AbstractController
         ]);
     }
 
+    /**
+     * @param string $slug
+     * @param int $id
+     * @param RecipeRepository $repository
+     * @return Response
+     */
     #[Route('/recettes/{slug}-{id}', name: 'recipe.show', requirements: ['id' => '\d+', 'slug' => '[a-z0-9-]+'])]
     public function show(string $slug, int $id, RecipeRepository $repository): Response
     {

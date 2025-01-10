@@ -9,6 +9,10 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController {
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
     #[Route("/", name: "home")]
     function index (Request $request): Response
     {
