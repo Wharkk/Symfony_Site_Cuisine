@@ -3,6 +3,8 @@
 {% block title %}Toutes les recettes{% endblock %}
 
 {% block body %}
+    <p>Plus de <strong>{{ totalTime }} heures</strong> de recette de cuisine !</p><br />
+
     <ul>
         {% for recipe in recipes %}
         <li>

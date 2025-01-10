@@ -9,15 +9,28 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class RecipeController extends AbstractController
 {
+    /**
+     * @param RecipeRepository $repository
+     * @return Response
+     */
     #[Route('/recettes', name: 'recipe.index')]
     public function index(RecipeRepository $repository): Response
     {
         $recipes = $repository->findWithDurationLowerThan(20);
+        $totalTime = $repository->findTotalDuration();
+
         return $this->render('recipe/index.html.twig', [
             'recipes' => $recipes,
+            'totalTime' => $totalTime,
         ]);
     }
 
+    /**
+     * @param string $slug
+     * @param int $id
+     * @param RecipeRepository $repository
+     * @return Response
+     */
     #[Route('/recettes/{slug}-{id}', name: 'recipe.show', requirements: ['id' => '\d+', 'slug' => '[a-z0-9-]+'])]
     public function show(string $slug, int $id, RecipeRepository $repository): Response
     {

@@ -17,6 +17,17 @@ class RecipeRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return int
+     */
+    public function findTotalDuration(): int
+    {
+        return $this->createQueryBuilder('r')
+            ->select('SUM(r.duration) as total')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
      * @param int $duration
      * @return Recipe[]
      */
