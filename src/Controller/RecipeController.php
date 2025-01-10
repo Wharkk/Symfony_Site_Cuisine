@@ -14,7 +14,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class RecipeController extends AbstractController
 {
     #[Route('/recettes', name: 'recipe.index')]
-    public function index(RecipeRepository $repository) {
+    public function index(RecipeRepository $repository): Response
+    {
         $recipes = $repository->findWithDurationLowerThan(20);
         $totalTime = $repository->findTotalDuration();
 
@@ -25,7 +26,8 @@ class RecipeController extends AbstractController
     }
 
     #[Route('/recettes/{slug}-{id}', name: 'recipe.show', requirements: ['id' => '\d+', 'slug' => '[a-z0-9-]+'])]
-    public function show(string $slug, int $id, RecipeRepository $repository) {
+    public function show(string $slug, int $id, RecipeRepository $repository): Response
+    {
         $recipe = $repository->find($id);
 
         if ($recipe->getSlug() !== $slug) {
@@ -38,7 +40,8 @@ class RecipeController extends AbstractController
     }
 
     #[Route('/recettes/{id}/edit', name: 'recipe.edit', requirements: ['id' => '\d+'])]
-    public function edit(Recipe $recipe, Request $request, EntityManagerInterface $em) {
+    public function edit(Recipe $recipe, Request $request, EntityManagerInterface $em): Response
+    {
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
 
@@ -50,6 +53,24 @@ class RecipeController extends AbstractController
 
         return $this->render('recipe/edit.html.twig', [
             'recipe' => $recipe,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/recettes/create', name: 'recipe.create')]
+    public function create(Request $request, EntityManagerInterface $em): Response
+    {
+        $recipe = new Recipe();
+        $form = $this->createForm(RecipeType::class, $recipe);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($recipe);
+            $em->flush();
+            $this->addFlash('success', 'La recette a bien été créée.');
+            return $this->redirectToRoute('recipe.show', ['slug' => $recipe->getSlug(), 'id' => $recipe->getId()]);
+        }
+
+        return $this->render('recipe/create.html.twig', [
             'form' => $form,
         ]);
     }
