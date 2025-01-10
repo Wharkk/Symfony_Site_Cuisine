@@ -20,7 +20,7 @@ class RecipeController extends AbstractController
     #[Route('/recettes', name: 'recipe.index')]
     public function index(RecipeRepository $repository): Response
     {
-        $recipes = $repository->findWithDurationLowerThan(20);
+        $recipes = $repository->findWithDurationLowerThan(35);
         $totalTime = $repository->findTotalDuration();
 
         return $this->render('recipe/index.html.twig', [
@@ -71,8 +71,12 @@ class RecipeController extends AbstractController
     {
         $recipe = new Recipe();
         $form = $this->createForm(RecipeType::class, $recipe);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $recipe->setCreatedAt(new \DateTimeImmutable());
+            $recipe->setUpdatedAt(new \DateTimeImmutable());
+
             $em->persist($recipe);
             $em->flush();
             $this->addFlash('success', 'La recette a bien été créée.');
