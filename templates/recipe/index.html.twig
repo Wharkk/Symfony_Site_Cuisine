@@ -3,25 +3,13 @@
 {% block title %}Toutes les recettes{% endblock %}
 
 {% block body %}
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Titre</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
+    <p>Plus de <strong>{{ totalTime }} heures</strong> de recette de cuisine !</p><br />
+
+    <ul>
         {% for recipe in recipes %}
-            <tr>
-                <td>
-                    <a href="{{ path('recipe.show', {id: recipe.id, slug: recipe.slug}) }}">{{ recipe.title }}</a>
-                </td>
-                <td>
-                    <a class="btn btn-primary" href="{{ path('recipe.edit', {id: recipe.id}) }}">Editer</a>
-                    <a class="btn btn-danger" href="{{ path('recipe.edit', {id: recipe.id}) }}">Supprimer</a>
-                </td>
-            </tr>
+        <li>
+            <a href="{{ path('recipe.show', {id: recipe.id, slug: recipe.slug}) }}">{{ recipe.title }}</a>
+        </li>
         {% endfor %}
-        </tbody>
-    </table>
+    </ul>
 {% endblock %}

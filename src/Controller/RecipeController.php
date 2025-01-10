@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Recipe;
-use App\Repository\RecipeRepository;
 use App\Form\RecipeType;
+use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +13,10 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class RecipeController extends AbstractController
 {
+    /**
+     * @param RecipeRepository $repository
+     * @return Response
+     */
     #[Route('/recettes', name: 'recipe.index')]
     public function index(RecipeRepository $repository): Response
     {
@@ -25,11 +29,16 @@ class RecipeController extends AbstractController
         ]);
     }
 
+    /**
+     * @param string $slug
+     * @param int $id
+     * @param RecipeRepository $repository
+     * @return Response
+     */
     #[Route('/recettes/{slug}-{id}', name: 'recipe.show', requirements: ['id' => '\d+', 'slug' => '[a-z0-9-]+'])]
     public function show(string $slug, int $id, RecipeRepository $repository): Response
     {
         $recipe = $repository->find($id);
-
         if ($recipe->getSlug() !== $slug) {
             return $this->redirectToRoute('recipe.show', ['slug' => $recipe->getSlug(), 'id' => $recipe->getId()]);
         }
